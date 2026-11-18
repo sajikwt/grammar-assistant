@@ -1,0 +1,1105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Grammar Assistant — Free Personal Writing Helper</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<style>
+/* ============================================================
+   DESIGN TOKENS
+   ============================================================ */
+:root {
+  --bg-primary: #ffffff;
+  --bg-secondary: #f8fafc;
+  --bg-tertiary: #f1f5f9;
+  --bg-input: #ffffff;
+  --border-color: #e2e8f0;
+  --border-focus: #3b82f6;
+  --text-primary: #0f172a;
+  --text-secondary: #475569;
+  --text-muted: #94a3b8;
+  --accent: #3b82f6;
+  --accent-hover: #2563eb;
+  --accent-light: #dbeafe;
+  --success: #10b981;
+  --success-light: #d1fae5;
+  --warning: #f59e0b;
+  --warning-light: #fef3c7;
+  --error: #ef4444;
+  --error-light: #fee2e2;
+  --shadow-sm: 0 1px 2px rgba(15,23,42,0.05);
+  --shadow-md: 0 4px 6px -1px rgba(15,23,42,0.1), 0 2px 4px -2px rgba(15,23,42,0.1);
+  --shadow-lg: 0 10px 15px -3px rgba(15,23,42,0.1), 0 4px 6px -4px rgba(15,23,42,0.1);
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+  --radius-full: 9999px;
+  --transition: 150ms cubic-bezier(0.4,0,0.2,1);
+  --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+  --header-h: 64px;
+  --max-w: 900px;
+}
+
+[data-theme="dark"] {
+  --bg-primary: #0f172a;
+  --bg-secondary: #1e293b;
+  --bg-tertiary: #334155;
+  --bg-input: #1e293b;
+  --border-color: #334155;
+  --border-focus: #60a5fa;
+  --text-primary: #f8fafc;
+  --text-secondary: #cbd5e1;
+  --text-muted: #64748b;
+  --accent: #60a5fa;
+  --accent-hover: #93c5fd;
+  --accent-light: #1e3a5f;
+  --success: #34d399;
+  --success-light: #064e3b;
+  --warning: #fbbf24;
+  --warning-light: #451a03;
+  --error: #f87171;
+  --error-light: #450a0a;
+  --shadow-sm: 0 1px 2px rgba(0,0,0,0.3);
+  --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.4), 0 2px 4px -2px rgba(0,0,0,0.3);
+  --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.4), 0 4px 6px -4px rgba(0,0,0,0.3);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 16px; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+body {
+  font-family: var(--font-sans);
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  line-height: 1.6;
+  min-height: 100vh;
+  transition: background var(--transition), color var(--transition);
+}
+
+.app { max-width: var(--max-w); margin: 0 auto; padding: calc(var(--header-h) + 24px) 20px 40px; }
+
+.header {
+  position: fixed; top: 0; left: 0; right: 0; height: var(--header-h);
+  background: var(--bg-primary); border-bottom: 1px solid var(--border-color);
+  display: flex; align-items: center; justify-content: space-between; padding: 0 24px;
+  z-index: 100;
+}
+.header-left { display: flex; align-items: center; gap: 12px; }
+.logo { display: flex; align-items: center; gap: 10px; }
+.logo-icon { width: 36px; height: 36px; border-radius: var(--radius-md); background: linear-gradient(135deg, var(--accent), #8b5cf6); display: flex; align-items: center; justify-content: center; color: white; font-size: 18px; box-shadow: var(--shadow-md); }
+.logo-text { font-weight: 700; font-size: 1.25rem; color: var(--text-primary); letter-spacing: -0.02em; }
+.header-right { display: flex; align-items: center; gap: 8px; }
+
+.card {
+  background: var(--bg-primary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+  transition: box-shadow var(--transition), border-color var(--transition);
+}
+.card:hover { box-shadow: var(--shadow-md); }
+
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  padding: 10px 20px; font-size: 0.875rem; font-weight: 500; font-family: inherit;
+  border: none; border-radius: var(--radius-md); cursor: pointer;
+  transition: all var(--transition); text-decoration: none; white-space: nowrap;
+}
+.btn:disabled { opacity: 0.5; cursor: not-allowed; }
+.btn-primary { background: var(--accent); color: white; }
+.btn-primary:hover:not(:disabled) { background: var(--accent-hover); box-shadow: 0 4px 12px rgba(59,130,246,0.3); }
+.btn-secondary { background: var(--bg-tertiary); color: var(--text-primary); border: 1px solid var(--border-color); }
+.btn-secondary:hover:not(:disabled) { background: var(--border-color); }
+.btn-ghost { background: transparent; color: var(--text-secondary); }
+.btn-ghost:hover:not(:disabled) { background: var(--bg-tertiary); color: var(--text-primary); }
+.btn-success { background: var(--success); color: white; }
+.btn-success:hover:not(:disabled) { background: #059669; }
+.btn-sm { padding: 6px 12px; font-size: 0.8125rem; }
+.btn-icon { padding: 8px; border-radius: var(--radius-sm); }
+.btn-icon.btn-sm { padding: 6px; }
+
+.toggle { position: relative; display: inline-flex; align-items: center; gap: 10px; cursor: pointer; }
+.toggle input { position: absolute; opacity: 0; width: 0; height: 0; }
+.toggle-slider {
+  width: 44px; height: 24px; background: var(--bg-tertiary); border: 1px solid var(--border-color);
+  border-radius: var(--radius-full); position: relative; transition: all var(--transition);
+}
+.toggle-slider::after {
+  content: ''; position: absolute; top: 1px; left: 1px; width: 20px; height: 20px;
+  background: white; border-radius: 50%; box-shadow: var(--shadow-sm);
+  transition: transform var(--transition);
+  border: 1px solid var(--border-color);
+}
+.toggle input:checked + .toggle-slider { background: var(--accent); border-color: var(--accent); }
+.toggle input:checked + .toggle-slider::after { transform: translateX(20px); background: white; }
+.toggle-label { font-size: 0.8125rem; font-weight: 500; color: var(--text-secondary); user-select: none; }
+
+.textarea-wrap { position: relative; }
+.textarea {
+  width: 100%; min-height: 160px; padding: 16px; font-family: var(--font-sans);
+  font-size: 1rem; line-height: 1.7; color: var(--text-primary); background: var(--bg-input);
+  border: 2px solid var(--border-color); border-radius: var(--radius-md); resize: vertical;
+  transition: border-color var(--transition), box-shadow var(--transition);
+}
+.textarea:focus { outline: none; border-color: var(--border-focus); box-shadow: 0 0 0 3px var(--accent-light); }
+.textarea::placeholder { color: var(--text-muted); }
+.char-count { position: absolute; bottom: 8px; right: 12px; font-size: 0.75rem; color: var(--text-muted); font-family: var(--font-mono); }
+
+.result-area { background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 16px; min-height: 140px; position: relative; }
+.result-content { white-space: pre-wrap; word-wrap: break-word; font-size: 1rem; line-height: 1.7; color: var(--text-primary); min-height: 100px; }
+.result-placeholder { color: var(--text-muted); font-style: italic; }
+.diff-highlight { background: var(--success-light); color: #065f46; padding: 0 2px; border-radius: 2px; font-weight: 500; }
+.diff-highlight.error { background: var(--error-light); color: #991b1b; }
+
+.badge { display: inline-flex; align-items: center; gap: 4px; padding: 4px 10px; border-radius: var(--radius-full); font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; }
+.badge-primary { background: var(--accent-light); color: var(--accent); }
+.badge-success { background: var(--success-light); color: #065f46; }
+.badge-warning { background: var(--warning-light); color: #92400e; }
+.badge-error { background: var(--error-light); color: #991b1b; }
+.badge-info { background: var(--bg-tertiary); color: var(--text-secondary); }
+
+.section { margin-bottom: 24px; }
+.section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+.section-title { font-size: 0.875rem; font-weight: 600; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.05em; }
+.section-actions { display: flex; gap: 8px; }
+
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+@media (max-width: 768px) { .grid-2 { grid-template-columns: 1fr; } }
+
+.status-pill { display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; border-radius: var(--radius-full); font-size: 0.75rem; font-weight: 500; }
+.status-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--text-muted); }
+.status-dot.active { background: var(--success); box-shadow: 0 0 0 3px var(--success-light); }
+.status-dot.recording { background: var(--error); animation: pulse 1s infinite; box-shadow: 0 0 0 3px var(--error-light); }
+@keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+
+.toast-container { position: fixed; bottom: 24px; right: 24px; z-index: 1000; display: flex; flex-direction: column; gap: 8px; }
+.toast { background: var(--bg-primary); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 12px 16px; box-shadow: var(--shadow-lg); display: flex; align-items: center; gap: 10px; min-width: 280px; max-width: 400px; animation: slideIn 0.3s ease; }
+.toast.success { border-left: 4px solid var(--success); }
+.toast.error { border-left: 4px solid var(--error); }
+.toast.warning { border-left: 4px solid var(--warning); }
+.toast.info { border-left: 4px solid var(--accent); }
+@keyframes slideIn { from { opacity: 0; transform: translateX(100%); } to { opacity: 1; transform: translateX(0); } }
+
+.modal-overlay { position: fixed; inset: 0; background: rgba(15,23,42,0.6); z-index: 200; display: none; align-items: center; justify-content: center; padding: 24px; backdrop-filter: blur(4px); }
+.modal-overlay.open { display: flex; }
+.modal { background: var(--bg-primary); border: 1px solid var(--border-color); border-radius: var(--radius-lg); box-shadow: var(--shadow-lg); width: 100%; max-width: 520px; max-height: 90vh; overflow-y: auto; animation: modalIn 0.2s ease; }
+@keyframes modalIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+.modal-header { padding: 20px 24px; border-bottom: 1px solid var(--border-color); display: flex; align-items: center; justify-content: space-between; }
+.modal-title { font-size: 1.125rem; font-weight: 600; color: var(--text-primary); }
+.modal-close { width: 36px; height: 36px; border: none; background: transparent; border-radius: var(--radius-md); color: var(--text-muted); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all var(--transition); }
+.modal-close:hover { background: var(--bg-tertiary); color: var(--text-primary); }
+.modal-body { padding: 24px; }
+.modal-footer { padding: 16px 24px; border-top: 1px solid var(--border-color); display: flex; justify-content: flex-end; gap: 10px; }
+
+.setting-item { display: flex; align-items: center; justify-content: space-between; padding: 16px 0; border-bottom: 1px solid var(--border-color); }
+.setting-item:last-child { border-bottom: none; }
+.setting-info { display: flex; flex-direction: column; gap: 4px; }
+.setting-label { font-weight: 500; color: var(--text-primary); }
+.setting-desc { font-size: 0.8125rem; color: var(--text-muted); }
+.setting-input { font-family: var(--font-mono); font-size: 0.8125rem; padding: 8px 12px; border: 1px solid var(--border-color); border-radius: var(--radius-sm); background: var(--bg-input); color: var(--text-primary); width: 200px; }
+
+.footer { text-align: center; padding: 40px 20px; color: var(--text-muted); font-size: 0.8125rem; }
+.footer a { color: var(--accent); text-decoration: none; }
+.footer a:hover { text-decoration: underline; }
+
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
+
+/* Loading overlay on button */
+.btn .spinner { display: inline-block; width: 14px; height: 14px; border: 2px solid rgba(255,255,255,0.3); border-top-color: white; border-radius: 50%; animation: spin 0.6s linear infinite; margin-right: 8px; }
+.btn-secondary .spinner { border-color: rgba(0,0,0,0.2); border-top-color: var(--text-primary); }
+@keyframes spin { to { transform: rotate(360deg); } }
+</style>
+</head>
+<body>
+<!-- Header -->
+<header class="header" role="banner">
+  <div class="header-left">
+    <div class="logo">
+      <div class="logo-icon"><i class="fas fa-pen-to-square"></i></div>
+      <span class="logo-text">Grammar Assistant</span>
+    </div>
+  </div>
+  <div class="header-right">
+    <label class="toggle" title="Dark mode" id="themeToggle">
+      <input type="checkbox" id="themeInput">
+      <span class="toggle-slider"></span>
+      <span class="toggle-label" id="themeLabel">Dark</span>
+    </label>
+    <button class="btn btn-ghost btn-icon" id="settingsBtn" aria-label="Settings"><i class="fas fa-cog"></i></button>
+  </div>
+</header>
+
+<!-- Main App -->
+<main class="app" role="main">
+  <!-- Input Section -->
+  <section class="section">
+    <div class="section-header">
+      <span class="section-title">Your Text</span>
+      <div class="section-actions">
+        <button class="btn btn-primary" id="voiceBtn" aria-label="Start voice input">
+          <i class="fas fa-microphone" id="voiceIcon"></i>
+          <span id="voiceText">Start Voice</span>
+        </button>
+        <button class="btn btn-secondary" id="pasteBtn"><i class="fas fa-clipboard"></i> Paste</button>
+        <button class="btn btn-ghost btn-sm" id="clearInputBtn"><i class="fas fa-trash"></i></button>
+      </div>
+    </div>
+    <div class="textarea-wrap">
+      <textarea class="textarea" id="inputText" placeholder="Type, paste, or speak your text here...&#10;&#10;Supports English & Malayalam. Click 'Fix Grammar' to correct English. Click 'Translate' to convert Malayalam → English."></textarea>
+      <span class="char-count"><span id="inputCount">0</span> / 5000 chars</span>
+    </div>
+    <div style="display: flex; flex-wrap: wrap; gap: 10px; margin-top: 12px;">
+      <label class="toggle" style="margin-top: 2px;">
+        <input type="checkbox" id="translateToggle">
+        <span class="toggle-slider"></span>
+        <span class="toggle-label">Malayalam → English</span>
+      </label>
+      <label class="toggle" style="margin-top: 2px;">
+        <input type="checkbox" id="autoFixToggle" checked>
+        <span class="toggle-slider"></span>
+        <span class="toggle-label">Auto-fix on translate</span>
+      </label>
+      <div style="flex: 1; min-width: 120px;"></div>
+      <button class="btn btn-primary" id="fixBtn"><i class="fas fa-magic"></i> Fix Grammar</button>
+      <button class="btn btn-success" id="translateBtn"><i class="fas fa-language"></i> Translate</button>
+    </div>
+  </section>
+
+  <!-- Status Row -->
+  <section class="section" style="margin-bottom: 16px;">
+    <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 12px;">
+      <span class="status-pill" id="apiStatus">
+        <span class="status-dot" id="apiStatusDot"></span>
+        <span id="apiStatusText">Checking APIs...</span>
+      </span>
+      <span class="badge badge-info" id="langBadge">Auto-detect</span>
+      <div style="flex: 1;"></div>
+      <span class="badge badge-primary" id="modeBadge">Cloud APIs</span>
+    </div>
+  </section>
+
+  <!-- Result Section -->
+  <section class="section">
+    <div class="section-header">
+      <span class="section-title">Corrected / Translated</span>
+      <div class="section-actions">
+        <button class="btn btn-secondary btn-sm" id="copyBtn"><i class="fas fa-copy"></i> Copy</button>
+        <button class="btn btn-ghost btn-sm" id="speakBtn"><i class="fas fa-volume-up"></i> Speak</button>
+        <button class="btn btn-ghost btn-sm" id="swapBtn" title="Swap input ↔ output"><i class="fas fa-exchange-alt"></i></button>
+      </div>
+    </div>
+    <div class="result-area" id="resultArea">
+      <div class="result-content result-placeholder" id="resultContent">Your corrected text will appear here...</div>
+    </div>
+    <div style="display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap;">
+      <span class="badge badge-success" id="correctionCount" style="display: none;">0 corrections</span>
+      <span class="badge badge-warning" id="translationCount" style="display: none;">Translated</span>
+    </div>
+    <div id="issueList" style="display: flex; flex-direction: column; gap: 6px; margin-top: 10px;"></div>
+  </section>
+
+  <!-- Quick Actions -->
+  <section class="section">
+    <div class="section-header">
+      <span class="section-title">Quick Actions</span>
+    </div>
+    <div style="display: flex; flex-wrap: wrap; gap: 10px;">
+      <button class="btn btn-secondary btn-sm" data-action="formal"><i class="fas fa-briefcase"></i> Make Formal</button>
+      <button class="btn btn-secondary btn-sm" data-action="casual"><i class="fas fa-comments"></i> Make Casual</button>
+      <button class="btn btn-secondary btn-sm" data-action="concise"><i class="fas fa-compress"></i> Make Concise</button>
+      <button class="btn btn-secondary btn-sm" data-action="expand"><i class="fas fa-expand"></i> Expand</button>
+      <button class="btn btn-secondary btn-sm" data-action="bullets"><i class="fas fa-list-ul"></i> Bullet Points</button>
+      <button class="btn btn-secondary btn-sm" data-action="email"><i class="fas fa-envelope"></i> Email Format</button>
+    </div>
+  </section>
+
+  <!-- History -->
+  <section class="section">
+    <div class="section-header">
+      <span class="section-title">Recent History</span>
+      <button class="btn btn-ghost btn-sm" id="clearHistoryBtn"><i class="fas fa-trash"></i> Clear</button>
+    </div>
+    <div id="historyList" style="display: flex; flex-direction: column; gap: 8px; max-height: 200px; overflow-y: auto;">
+      <div class="result-placeholder" style="padding: 20px; text-align: center;">No history yet. Start writing!</div>
+    </div>
+  </section>
+</main>
+
+<!-- Settings Modal -->
+<div class="modal-overlay" id="settingsModal" role="dialog" aria-modal="true" aria-labelledby="settingsTitle">
+  <div class="modal">
+    <div class="modal-header">
+      <h2 class="modal-title" id="settingsTitle"><i class="fas fa-cog"></i> Settings</h2>
+      <button class="modal-close" id="closeSettingsBtn" aria-label="Close settings"><i class="fas fa-times"></i></button>
+    </div>
+    <div class="modal-body">
+      <div class="setting-item">
+        <div class="setting-info">
+          <span class="setting-label">Mode</span>
+          <span class="setting-desc">Switch between free cloud APIs and your local backend</span>
+        </div>
+        <label class="toggle">
+          <input type="checkbox" id="localModeToggle">
+          <span class="toggle-slider"></span>
+          <span class="toggle-label">Local Mode</span>
+        </label>
+      </div>
+
+      <div class="setting-item" id="localEndpoints" style="display: none;">
+        <div class="setting-info">
+          <span class="setting-label">LanguageTool Server</span>
+          <span class="setting-desc">Local grammar checking (default: http://localhost:8010)</span>
+        </div>
+        <input type="url" class="setting-input" id="ltEndpoint" value="http://localhost:8010/v2" placeholder="http://localhost:8010/v2">
+      </div>
+
+      <div class="setting-item" id="localEndpoints2" style="display: none;">
+        <div class="setting-info">
+          <span class="setting-label">LibreTranslate Server</span>
+          <span class="setting-desc">Local translation (default: http://localhost:5000)</span>
+        </div>
+        <input type="url" class="setting-input" id="libreEndpoint" value="http://localhost:5000" placeholder="http://localhost:5000">
+      </div>
+
+      <div class="setting-item">
+        <div class="setting-info">
+          <span class="setting-label">Cloud Translation API</span>
+          <span class="setting-desc">Free public service for Malayalam → English (falls back to the other if one fails)</span>
+        </div>
+        <select class="setting-input" id="translateApiSelect" style="width: auto; max-width: 100%;">
+          <option value="mymemory">MyMemory API</option>
+          <option value="google-unofficial">Google Translate (unofficial)</option>
+        </select>
+      </div>
+
+      <div class="setting-item">
+        <div class="setting-info">
+          <span class="setting-label">LanguageTool Cloud API</span>
+          <span class="setting-desc">Public instance (20 req/min free, no key needed)</span>
+        </div>
+        <input type="url" class="setting-input" id="ltCloudEndpoint" value="https://api.languagetool.org/v2" style="width: auto; max-width: 100%;">
+      </div>
+
+      <hr style="margin: 16px 0; border-color: var(--border-color);">
+      <div class="setting-item">
+        <div class="setting-info">
+          <span class="setting-label">Auto-save History</span>
+          <span class="setting-desc">Keep last 50 corrections in browser storage</span>
+        </div>
+        <label class="toggle">
+          <input type="checkbox" id="autoSaveToggle" checked>
+          <span class="toggle-slider"></span>
+        </label>
+      </div>
+
+      <div class="setting-item">
+        <div class="setting-info">
+          <span class="setting-label">Show Diff Highlights</span>
+          <span class="setting-desc">Highlight grammar changes in result</span>
+        </div>
+        <label class="toggle">
+          <input type="checkbox" id="showDiffToggle" checked>
+          <span class="toggle-slider"></span>
+        </label>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" id="resetSettingsBtn">Reset to Defaults</button>
+      <button class="btn btn-primary" id="saveSettingsBtn">Save Settings</button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast Container -->
+<div class="toast-container" id="toastContainer"></div>
+
+<script>
+/* ============================================================
+   GRAMMAR ASSISTANT — Fixed for GitHub Pages (CORS proxy)
+   ============================================================ */
+
+// ---- CONFIG & STATE ----
+const CONFIG = {
+  // Public API endpoints (free tiers). All of these allow calls straight from
+  // a browser, so no CORS proxy is needed.
+  LANGUAGETOOL_CLOUD: 'https://api.languagetool.org/v2',
+  MYMEMORY_API: 'https://api.mymemory.translated.net/get',
+  GOOGLE_TRANSLATE_UNOFFICIAL: 'https://translate.googleapis.com/translate_a/single',
+
+  MAX_CHARS: 5000,
+  CHUNK_CHARS: 450,        // MyMemory rejects requests longer than 500 characters
+  HISTORY_LIMIT: 50,
+  REQUEST_TIMEOUT: 20000
+};
+
+const state = {
+  settings: {
+    localMode: false,
+    ltEndpoint: 'http://localhost:8010/v2',
+    libreEndpoint: 'http://localhost:5000',
+    translateApi: 'mymemory',
+    ltCloudEndpoint: 'https://api.languagetool.org/v2',
+    autoSave: true,
+    showDiff: true,
+    theme: 'light'
+  },
+  isRecording: false,
+  recognition: null,
+  lastResult: '',
+  lastCorrections: []
+};
+
+// ---- DOM ELEMENTS ----
+const els = {
+  themeInput: document.getElementById('themeInput'),
+  themeLabel: document.getElementById('themeLabel'),
+  settingsBtn: document.getElementById('settingsBtn'),
+  inputText: document.getElementById('inputText'),
+  inputCount: document.getElementById('inputCount'),
+  voiceBtn: document.getElementById('voiceBtn'),
+  voiceIcon: document.getElementById('voiceIcon'),
+  voiceText: document.getElementById('voiceText'),
+  pasteBtn: document.getElementById('pasteBtn'),
+  clearInputBtn: document.getElementById('clearInputBtn'),
+  translateToggle: document.getElementById('translateToggle'),
+  autoFixToggle: document.getElementById('autoFixToggle'),
+  fixBtn: document.getElementById('fixBtn'),
+  translateBtn: document.getElementById('translateBtn'),
+  apiStatusDot: document.getElementById('apiStatusDot'),
+  apiStatusText: document.getElementById('apiStatusText'),
+  langBadge: document.getElementById('langBadge'),
+  modeBadge: document.getElementById('modeBadge'),
+  resultArea: document.getElementById('resultArea'),
+  resultContent: document.getElementById('resultContent'),
+  correctionCount: document.getElementById('correctionCount'),
+  translationCount: document.getElementById('translationCount'),
+  issueList: document.getElementById('issueList'),
+  copyBtn: document.getElementById('copyBtn'),
+  speakBtn: document.getElementById('speakBtn'),
+  swapBtn: document.getElementById('swapBtn'),
+  quickActions: document.querySelectorAll('[data-action]'),
+  historyList: document.getElementById('historyList'),
+  clearHistoryBtn: document.getElementById('clearHistoryBtn'),
+  settingsModal: document.getElementById('settingsModal'),
+  closeSettingsBtn: document.getElementById('closeSettingsBtn'),
+  localModeToggle: document.getElementById('localModeToggle'),
+  localEndpoints: document.getElementById('localEndpoints'),
+  localEndpoints2: document.getElementById('localEndpoints2'),
+  ltEndpoint: document.getElementById('ltEndpoint'),
+  libreEndpoint: document.getElementById('libreEndpoint'),
+  translateApiSelect: document.getElementById('translateApiSelect'),
+  ltCloudEndpoint: document.getElementById('ltCloudEndpoint'),
+  autoSaveToggle: document.getElementById('autoSaveToggle'),
+  showDiffToggle: document.getElementById('showDiffToggle'),
+  saveSettingsBtn: document.getElementById('saveSettingsBtn'),
+  resetSettingsBtn: document.getElementById('resetSettingsBtn'),
+  toastContainer: document.getElementById('toastContainer')
+};
+
+// ---- UTILITIES ----
+function showToast(message, type = 'info', duration = 3000) {
+  const toast = document.createElement('div');
+  toast.className = `toast ${type}`;
+  const icons = { success: 'fa-check-circle', error: 'fa-exclamation-circle', warning: 'fa-exclamation-triangle', info: 'fa-info-circle' };
+  toast.innerHTML = `<i class="fas ${icons[type]}"></i><span>${message}</span>`;
+  els.toastContainer.appendChild(toast);
+  setTimeout(() => { toast.style.animation = 'slideIn 0.3s ease reverse'; setTimeout(() => toast.remove(), 300); }, duration);
+}
+
+function escapeHtml(str) {
+  return str.replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+}
+
+function debounce(fn, ms) { let t; return (...args) => { clearTimeout(t); t = setTimeout(() => fn(...args), ms); }; }
+
+// ---- SETTINGS ----
+function loadSettings() {
+  try {
+    const saved = localStorage.getItem('grammarAssistant_settings');
+    if (saved) Object.assign(state.settings, JSON.parse(saved));
+    const theme = localStorage.getItem('grammarAssistant_theme') || 'light';
+    state.settings.theme = theme;
+    applyTheme(theme);
+    applySettingsToUI();
+  } catch (e) { console.warn('Settings load failed:', e); }
+}
+
+function saveSettings() {
+  try {
+    localStorage.setItem('grammarAssistant_settings', JSON.stringify(state.settings));
+    localStorage.setItem('grammarAssistant_theme', state.settings.theme);
+    showToast('Settings saved', 'success');
+  } catch (e) { showToast('Failed to save settings', 'error'); }
+}
+
+function applySettingsToUI() {
+  const s = state.settings;
+  els.localModeToggle.checked = s.localMode;
+  els.ltEndpoint.value = s.ltEndpoint;
+  els.libreEndpoint.value = s.libreEndpoint;
+  // An older version stored 'libretranslate', which is no longer offered
+  if (!['mymemory', 'google-unofficial'].includes(s.translateApi)) s.translateApi = 'mymemory';
+  els.translateApiSelect.value = s.translateApi;
+  els.ltCloudEndpoint.value = s.ltCloudEndpoint;
+  els.autoSaveToggle.checked = s.autoSave;
+  els.showDiffToggle.checked = s.showDiff;
+  toggleLocalModeUI(s.localMode);
+  els.modeBadge.textContent = s.localMode ? 'Local Backend' : 'Cloud APIs';
+  els.modeBadge.className = `badge ${s.localMode ? 'badge-warning' : 'badge-primary'}`;
+}
+
+function toggleLocalModeUI(enabled) {
+  els.localEndpoints.style.display = enabled ? 'flex' : 'none';
+  els.localEndpoints2.style.display = enabled ? 'flex' : 'none';
+}
+
+// ---- THEME ----
+function applyTheme(theme) {
+  document.documentElement.setAttribute('data-theme', theme);
+  els.themeInput.checked = theme === 'dark';
+  els.themeLabel.textContent = theme === 'dark' ? 'Light' : 'Dark';
+}
+
+// ---- HISTORY ----
+function loadHistory() {
+  if (!state.settings.autoSave) { els.historyList.innerHTML = '<div class="result-placeholder" style="padding: 20px; text-align: center;">History disabled in settings</div>'; return; }
+  try {
+    const history = JSON.parse(localStorage.getItem('grammarAssistant_history') || '[]');
+    if (history.length === 0) {
+      els.historyList.innerHTML = '<div class="result-placeholder" style="padding: 20px; text-align: center;">No history yet. Start writing!</div>';
+      return;
+    }
+    // history is stored newest first, so index i is used as-is
+    els.historyList.innerHTML = history.map((item, i) => `
+      <div class="card" style="padding: 12px 16px; display: flex; gap: 12px; align-items: flex-start; cursor: pointer;" data-history="${i}">
+        <div style="flex: 1; min-width: 0;">
+          <div style="font-size: 0.8125rem; color: var(--text-muted); margin-bottom: 4px;">${item.timestamp} · ${item.type}</div>
+          <div style="font-size: 0.875rem; color: var(--text-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${escapeHtml(item.original.substring(0, 120))}${item.original.length > 120 ? '…' : ''}</div>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 4px;">
+          <button class="btn btn-ghost btn-sm btn-icon use-history" title="Use this" data-index="${i}"><i class="fas fa-arrow-up"></i></button>
+          <button class="btn btn-ghost btn-sm btn-icon delete-history" title="Delete" data-index="${i}"><i class="fas fa-times"></i></button>
+        </div>
+      </div>
+    `).join('');
+  } catch (e) { console.warn('History load error:', e); }
+}
+
+function addToHistory(original, result, type) {
+  if (!state.settings.autoSave) return;
+  try {
+    const history = JSON.parse(localStorage.getItem('grammarAssistant_history') || '[]');
+    history.unshift({ original: original.substring(0, 500), result: result.substring(0, 500), type, timestamp: new Date().toLocaleString() });
+    if (history.length > CONFIG.HISTORY_LIMIT) history.length = CONFIG.HISTORY_LIMIT;
+    localStorage.setItem('grammarAssistant_history', JSON.stringify(history));
+    loadHistory();
+  } catch (e) { console.warn('History save error:', e); }
+}
+
+function clearHistory() {
+  localStorage.removeItem('grammarAssistant_history');
+  loadHistory();
+  showToast('History cleared', 'success');
+}
+
+// ---- SPEECH RECOGNITION ----
+function initSpeechRecognition() {
+  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (!SpeechRecognition) {
+    els.voiceBtn.disabled = true;
+    els.voiceBtn.title = 'Web Speech API not supported. Use Chrome/Edge/Safari.';
+    els.voiceText.textContent = 'Voice Unavailable';
+    return;
+  }
+  state.recognition = new SpeechRecognition();
+  state.recognition.continuous = true;
+  state.recognition.interimResults = true;
+  state.recognition.lang = 'en-US';
+
+  state.recognition.onstart = () => {
+    state.isRecording = true;
+    els.voiceBtn.classList.add('btn-success');
+    els.voiceBtn.classList.remove('btn-primary');
+    els.voiceIcon.className = 'fas fa-stop-circle';
+    els.voiceText.textContent = 'Stop';
+    els.apiStatusDot.classList.add('recording');
+    els.apiStatusDot.classList.remove('active');
+    els.apiStatusText.textContent = 'Listening...';
+  };
+
+  state.recognition.onend = () => {
+    state.isRecording = false;
+    els.voiceBtn.classList.remove('btn-success');
+    els.voiceBtn.classList.add('btn-primary');
+    els.voiceIcon.className = 'fas fa-microphone';
+    els.voiceText.textContent = 'Start Voice';
+    els.apiStatusDot.classList.remove('recording');
+    updateApiStatus();
+  };
+
+  state.recognition.onresult = (event) => {
+    let finalTranscript = '';
+    for (let i = event.resultIndex; i < event.results.length; i++) {
+      if (event.results[i].isFinal) finalTranscript += event.results[i][0].transcript + ' ';
+    }
+    if (finalTranscript) {
+      els.inputText.value += finalTranscript;
+      updateCharCount();
+    }
+  };
+
+  state.recognition.onerror = (event) => {
+    if (event.error !== 'no-speech' && event.error !== 'aborted') {
+      showToast(`Voice error: ${event.error}`, 'error');
+    }
+  };
+}
+
+function toggleVoice() {
+  if (!state.recognition) return;
+  if (state.isRecording) {
+    state.recognition.stop();
+  } else {
+    state.recognition.lang = els.translateToggle.checked ? 'ml-IN' : 'en-US';
+    try { state.recognition.start(); } catch (e) { console.warn('Recognition start error:', e); }
+  }
+}
+
+// ---- FETCH ----
+// Each request gets its own AbortController, so the background status check
+// can no longer cancel a grammar or translation request that is in progress.
+async function fetchWithTimeout(url, options = {}, timeout = CONFIG.REQUEST_TIMEOUT) {
+  const controller = new AbortController();
+  const id = setTimeout(() => controller.abort(), timeout);
+  try {
+    return await fetch(url, { ...options, signal: controller.signal });
+  } catch (e) {
+    if (e.name === 'AbortError') throw new Error('Request timeout');
+    throw e;
+  } finally {
+    clearTimeout(id);
+  }
+}
+
+// Splits long text into pieces below `max` characters, breaking after
+// sentence endings (including the Malayalam/Hindi danda) where possible.
+function splitIntoChunks(text, max = CONFIG.CHUNK_CHARS) {
+  const sentences = text.match(/[^.!?।\n]+[.!?।]*\s*|\n+/g) || [text];
+  const chunks = [];
+  let current = '';
+  for (let s of sentences) {
+    while (s.length > max) {                       // a single very long sentence
+      if (current) { chunks.push(current); current = ''; }
+      let cut = s.lastIndexOf(' ', max);
+      if (cut < 1) cut = max;
+      chunks.push(s.slice(0, cut));
+      s = s.slice(cut);
+    }
+    if ((current + s).length > max) { chunks.push(current); current = s; }
+    else current += s;
+  }
+  if (current) chunks.push(current);
+  return chunks.filter(c => c.trim().length > 0);
+}
+
+// ---- GRAMMAR CHECK ----
+async function checkGrammar(text, lang = 'en-US') {
+  // Both endpoints already end in /v2, so only /check is added
+  const baseEndpoint = (state.settings.localMode
+    ? state.settings.ltEndpoint
+    : state.settings.ltCloudEndpoint).replace(/\/+$/, '');
+
+  const checkUrl = `${baseEndpoint}/check`;
+  const params = new URLSearchParams({ text, language: lang, enabledOnly: 'false' });
+
+  const res = await fetchWithTimeout(checkUrl, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    body: params.toString()
+  });
+
+  if (!res.ok) {
+    const errText = await res.text().catch(() => '');
+    throw new Error(`Grammar API error: ${res.status} ${errText}`);
+  }
+  return res.json();
+}
+
+function applyCorrections(text, matches) {
+  if (!matches || matches.length === 0) return { text, count: 0 };
+  const sorted = [...matches].sort((a, b) => b.offset - a.offset);
+  let result = text;
+  let count = 0;
+  for (const match of sorted) {
+    if (match.replacements && match.replacements.length > 0) {
+      const replacement = match.replacements[0].value;
+      result = result.substring(0, match.offset) + replacement + result.substring(match.offset + match.length);
+      count++;
+    }
+  }
+  return { text: result, count };
+}
+
+// ---- TRANSLATION ----
+function decodeEntities(str) {
+  const t = document.createElement('textarea');
+  t.innerHTML = str;
+  return t.value;
+}
+
+// Translates one piece of text (already short enough) with one service.
+async function translateChunk(api, text, sourceLang, targetLang) {
+  if (api === 'mymemory') {
+    const pair = encodeURIComponent(`${sourceLang}|${targetLang}`);
+    const res = await fetchWithTimeout(`${CONFIG.MYMEMORY_API}?q=${encodeURIComponent(text)}&langpair=${pair}`);
+    if (!res.ok) throw new Error(`MyMemory HTTP ${res.status}`);
+    const data = await res.json();
+    if (Number(data.responseStatus) !== 200) throw new Error(data.responseDetails || 'MyMemory error');
+    return decodeEntities(data.responseData.translatedText);
+  }
+
+  // google-unofficial
+  const url = `${CONFIG.GOOGLE_TRANSLATE_UNOFFICIAL}?client=gtx&sl=${sourceLang}&tl=${targetLang}&dt=t&q=${encodeURIComponent(text)}`;
+  const res = await fetchWithTimeout(url);
+  if (!res.ok) throw new Error(`Google Translate HTTP ${res.status}`);
+  const data = await res.json();
+  const out = (data[0] || []).map(x => x[0]).join('');
+  if (!out) throw new Error('Google Translate returned nothing');
+  return out;
+}
+
+async function translateText(text, sourceLang = 'ml', targetLang = 'en') {
+  if (state.settings.localMode) {
+    const res = await fetchWithTimeout(`${state.settings.libreEndpoint.replace(/\/+$/, '')}/translate`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ q: text, source: sourceLang, target: targetLang, format: 'text' })
+    });
+    if (!res.ok) throw new Error(`LibreTranslate HTTP ${res.status}`);
+    const data = await res.json();
+    return data.translatedText;
+  }
+
+  // Try the chosen service first, then the other one if it fails
+  const chosen = state.settings.translateApi === 'google-unofficial' ? 'google-unofficial' : 'mymemory';
+  const order = [chosen, chosen === 'mymemory' ? 'google-unofficial' : 'mymemory'];
+
+  let lastError;
+  for (const api of order) {
+    try {
+      let out = '';
+      for (const chunk of splitIntoChunks(text)) {
+        const lead = chunk.match(/^\s*/)[0];
+        const trail = chunk.match(/\s*$/)[0];
+        out += lead + (await translateChunk(api, chunk.trim(), sourceLang, targetLang)).trim() + trail;
+      }
+      return out.trim();
+    } catch (e) {
+      lastError = e;
+      console.warn(`${api} failed:`, e.message);
+    }
+  }
+  throw lastError || new Error('Translation failed');
+}
+
+// ---- MAIN ACTIONS ----
+async function fixGrammar() {
+  const text = els.inputText.value.trim();
+  if (!text) { showToast('Enter some text first', 'error'); return; }
+
+  setLoading(true, 'fixBtn', 'Checking grammar...');
+  try {
+    // Choose the language from the text itself, not from the toggle: English
+    // text must be checked as English even if the Malayalam toggle is on.
+    const lang = hasMalayalam(text) ? 'ml' : 'en-US';
+    const result = await checkGrammar(text, lang);
+    const { text: corrected, count } = applyCorrections(text, result.matches);
+
+    state.lastResult = corrected;
+    state.lastCorrections = result.matches || [];
+    renderResult(corrected, count, 'grammar');
+    showIssues(text, result.matches);
+    addToHistory(text, corrected, 'Grammar Fix');
+
+    const found = (result.matches || []).length;
+    if (count > 0) showToast(`Fixed ${count} issue${count !== 1 ? 's' : ''}`, 'success');
+    else if (found > 0) showToast(`Found ${found} issue${found !== 1 ? 's' : ''} with no automatic fix (see below)`, 'warning', 5000);
+    else showToast(`No issues found (checked as ${lang === 'ml' ? 'Malayalam' : 'English'})`, 'info', 4000);
+  } catch (e) {
+    console.error('Grammar check failed:', e);
+    showToast('Grammar API failed — using offline fallback', 'warning');
+    fallbackGrammarFix(text);
+  } finally {
+    setLoading(false, 'fixBtn', '<i class="fas fa-magic"></i> Fix Grammar');
+  }
+}
+
+function fallbackGrammarFix(text) {
+  let corrected = text
+    .replace(/\bi\b/g, 'I')
+    .replace(/\s+/g, ' ')
+    .replace(/\s+([.,!?;:])/g, '$1')
+    .replace(/([.!?])\s*([a-z])/g, (_, p1, p2) => p1 + ' ' + p2.toUpperCase())
+    .trim();
+  const count = (corrected !== text) ? 1 : 0;
+  state.lastResult = corrected;
+  renderResult(corrected, count, 'grammar');
+  addToHistory(text, corrected, 'Grammar Fix (Offline)');
+  showToast('Applied basic fixes (offline)', 'warning');
+}
+
+async function translate() {
+  const text = els.inputText.value.trim();
+  if (!text) { showToast('Enter some text first', 'error'); return; }
+  if (!hasMalayalam(text)) {
+    showToast('No Malayalam text found. Translate converts Malayalam to English; use Fix Grammar for English text.', 'warning', 6000);
+    return;
+  }
+
+  setLoading(true, 'translateBtn', 'Translating...');
+  try {
+    const translated = await translateText(text, 'ml', 'en');
+    let finalText = translated;
+    let corrections = 0;
+
+    if (els.autoFixToggle.checked && translated !== text) {
+      try {
+        const result = await checkGrammar(translated, 'en-US');
+        const { text: corrected, count } = applyCorrections(translated, result.matches);
+        finalText = corrected;
+        corrections = count;
+      } catch (e) { /* ignore */ }
+    }
+
+    state.lastResult = finalText;
+    renderResult(finalText, corrections, 'translate');
+    addToHistory(text, finalText, 'Translate' + (corrections ? ' + Grammar' : ''));
+    showToast('Translated' + (corrections ? ` + fixed ${corrections} issues` : ''), 'success');
+  } catch (e) {
+    console.error('Translation failed:', e);
+    showToast('Translation failed: ' + e.message, 'error');
+  } finally {
+    setLoading(false, 'translateBtn', '<i class="fas fa-language"></i> Translate');
+  }
+}
+
+function hasMalayalam(text) {
+  return /[ഀ-ൿ]/.test(text);
+}
+
+// Lists problems LanguageTool found but could not fix automatically
+function showIssues(text, matches) {
+  const unfixed = (matches || []).filter(m => !(m.replacements && m.replacements.length));
+  els.issueList.innerHTML = unfixed.map(m =>
+    `<div class="card" style="padding: 8px 12px; font-size: 0.8125rem;"><strong>${escapeHtml(text.substr(m.offset, m.length))}</strong> — ${escapeHtml(m.message || 'Possible problem')}</div>`
+  ).join('');
+}
+
+function renderResult(text, count, type) {
+  els.issueList.innerHTML = '';
+  els.resultContent.classList.remove('result-placeholder');
+  els.resultContent.innerHTML = escapeHtml(text);
+  els.correctionCount.textContent = `${count} correction${count !== 1 ? 's' : ''}`;
+  els.correctionCount.style.display = (type === 'grammar' && count > 0) ? 'inline-flex' : 'none';
+  els.translationCount.style.display = (type === 'translate') ? 'inline-flex' : 'none';
+}
+
+function setLoading(loading, btnId, text) {
+  const btn = els[btnId];
+  btn.disabled = loading;
+  if (loading) {
+    btn.innerHTML = `<span class="spinner"></span> ${text}`;
+  } else {
+    btn.innerHTML = text;
+  }
+}
+
+async function handleQuickAction(action) {
+  showToast(`${action.charAt(0).toUpperCase() + action.slice(1)} requires LLM backend`, 'info');
+}
+
+// ---- UTILITY ACTIONS ----
+async function copyResult() {
+  const text = els.resultContent.textContent.trim();
+  if (!text || els.resultContent.classList.contains('result-placeholder')) { showToast('Nothing to copy', 'error'); return; }
+  try {
+    await navigator.clipboard.writeText(text);
+    showToast('Copied to clipboard!', 'success');
+  } catch (e) { showToast('Copy failed', 'error'); }
+}
+
+function speakResult() {
+  const text = els.resultContent.textContent.trim();
+  if (!text || els.resultContent.classList.contains('result-placeholder')) { showToast('Nothing to speak', 'error'); return; }
+  if ('speechSynthesis' in window) {
+    const utter = new SpeechSynthesisUtterance(text);
+    utter.lang = 'en-US';
+    speechSynthesis.cancel();
+    speechSynthesis.speak(utter);
+    showToast('Speaking...', 'info', 1500);
+  } else { showToast('Text-to-speech not supported', 'error'); }
+}
+
+function swapText() {
+  const input = els.inputText.value;
+  const output = els.resultContent.textContent;
+  if (!output || els.resultContent.classList.contains('result-placeholder')) { showToast('Nothing to swap', 'error'); return; }
+  els.inputText.value = output;
+  els.resultContent.innerHTML = escapeHtml(input);
+  els.resultContent.classList.remove('result-placeholder');
+  updateCharCount();
+  showToast('Swapped input ↔ output', 'success');
+}
+
+async function pasteText() {
+  try {
+    const text = await navigator.clipboard.readText();
+    els.inputText.value = text;
+    updateCharCount();
+    showToast('Pasted from clipboard', 'success');
+  } catch (e) { showToast('Paste failed — allow clipboard permission', 'error'); }
+}
+
+function clearInput() {
+  els.inputText.value = '';
+  updateCharCount();
+  els.resultContent.textContent = 'Your corrected text will appear here...';
+  els.resultContent.classList.add('result-placeholder');
+  els.correctionCount.style.display = 'none';
+  els.translationCount.style.display = 'none';
+}
+
+// ---- CHAR COUNT ----
+function updateCharCount() {
+  const len = els.inputText.value.length;
+  els.inputCount.textContent = len;
+  els.inputCount.style.color = len > CONFIG.MAX_CHARS * 0.9 ? 'var(--error)' : 'var(--text-muted)';
+  if (len > CONFIG.MAX_CHARS) {
+    els.inputText.value = els.inputText.value.substring(0, CONFIG.MAX_CHARS);
+    els.inputCount.textContent = CONFIG.MAX_CHARS;
+  }
+}
+
+// ---- API STATUS CHECK ----
+async function updateApiStatus() {
+  try {
+    const base = (state.settings.localMode ? state.settings.ltEndpoint : state.settings.ltCloudEndpoint).replace(/\/+$/, '');
+    const res = await fetchWithTimeout(`${base}/languages`, { method: 'GET' }, 8000);
+    if (res.ok) {
+      els.apiStatusDot.classList.add('active');
+      els.apiStatusText.textContent = state.settings.localMode ? 'Local LanguageTool connected' : 'LanguageTool API connected';
+    } else throw new Error('API error');
+  } catch (e) {
+    els.apiStatusDot.classList.remove('active');
+    els.apiStatusText.textContent = state.settings.localMode ? 'Local server not reachable' : 'Using offline fallback / API limited';
+  }
+}
+
+// ---- EVENT LISTENERS ----
+function bindEvents() {
+  els.themeInput.addEventListener('change', () => {
+    const theme = els.themeInput.checked ? 'dark' : 'light';
+    applyTheme(theme);
+    state.settings.theme = theme;
+    saveSettings();
+  });
+
+  els.settingsBtn.addEventListener('click', () => els.settingsModal.classList.add('open'));
+  els.closeSettingsBtn.addEventListener('click', () => els.settingsModal.classList.remove('open'));
+  els.settingsModal.addEventListener('click', (e) => { if (e.target === els.settingsModal) els.settingsModal.classList.remove('open'); });
+
+  els.inputText.addEventListener('input', updateCharCount);
+  els.voiceBtn.addEventListener('click', toggleVoice);
+  els.pasteBtn.addEventListener('click', pasteText);
+  els.clearInputBtn.addEventListener('click', clearInput);
+  els.fixBtn.addEventListener('click', fixGrammar);
+  els.translateBtn.addEventListener('click', translate);
+
+  els.copyBtn.addEventListener('click', copyResult);
+  els.speakBtn.addEventListener('click', speakResult);
+  els.swapBtn.addEventListener('click', swapText);
+
+  els.quickActions.forEach(btn => {
+    btn.addEventListener('click', () => handleQuickAction(btn.dataset.action));
+  });
+
+  els.clearHistoryBtn.addEventListener('click', clearHistory);
+  els.historyList.addEventListener('click', (e) => {
+    const useBtn = e.target.closest('.use-history');
+    const delBtn = e.target.closest('.delete-history');
+    if (useBtn) {
+      const idx = parseInt(useBtn.dataset.index);
+      const history = JSON.parse(localStorage.getItem('grammarAssistant_history') || '[]');
+      const item = history[idx];
+      if (item) { els.inputText.value = item.original; updateCharCount(); showToast('Loaded from history', 'success'); }
+    }
+    if (delBtn) {
+      const idx = parseInt(delBtn.dataset.index);
+      const history = JSON.parse(localStorage.getItem('grammarAssistant_history') || '[]');
+      history.splice(idx, 1);
+      localStorage.setItem('grammarAssistant_history', JSON.stringify(history));
+      loadHistory();
+    }
+  });
+
+  els.localModeToggle.addEventListener('change', () => {
+    const enabled = els.localModeToggle.checked;
+    state.settings.localMode = enabled;
+    toggleLocalModeUI(enabled);
+    els.modeBadge.textContent = enabled ? 'Local Backend' : 'Cloud APIs';
+    els.modeBadge.className = `badge ${enabled ? 'badge-warning' : 'badge-primary'}`;
+    updateApiStatus();
+  });
+
+  els.ltEndpoint.addEventListener('change', () => { state.settings.ltEndpoint = els.ltEndpoint.value; });
+  els.libreEndpoint.addEventListener('change', () => { state.settings.libreEndpoint = els.libreEndpoint.value; });
+  els.translateApiSelect.addEventListener('change', () => { state.settings.translateApi = els.translateApiSelect.value; });
+  els.ltCloudEndpoint.addEventListener('change', () => { state.settings.ltCloudEndpoint = els.ltCloudEndpoint.value; });
+  els.autoSaveToggle.addEventListener('change', () => { state.settings.autoSave = els.autoSaveToggle.checked; });
+  els.showDiffToggle.addEventListener('change', () => { state.settings.showDiff = els.showDiffToggle.checked; });
+
+  els.saveSettingsBtn.addEventListener('click', () => {
+    saveSettings();
+    els.settingsModal.classList.remove('open');
+  });
+
+  els.resetSettingsBtn.addEventListener('click', () => {
+    if (confirm('Reset all settings to defaults?')) {
+      localStorage.removeItem('grammarAssistant_settings');
+      loadSettings();
+      applySettingsToUI();
+      showToast('Settings reset', 'success');
+    }
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if ((e.ctrlKey || e.metaKey) && e.key === 'Enter' && document.activeElement === els.inputText) fixGrammar();
+    if (e.key === 'Escape') els.settingsModal.classList.remove('open');
+  });
+}
+
+// ---- INIT ----
+async function init() {
+  loadSettings();
+  loadHistory();
+  initSpeechRecognition();
+  bindEvents();
+  updateApiStatus();
+  setInterval(updateApiStatus, 60000);
+  setTimeout(() => els.inputText.focus(), 100);
+  console.log('Grammar Assistant ready');
+}
+
+init();
+</script>
+</body>
+</html>
+
+
+
