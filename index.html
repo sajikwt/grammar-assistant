@@ -8,10 +8,9 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 <style>
 /* ============================================================
-   DESIGN TOKENS — swap these for your brand
+   DESIGN TOKENS
    ============================================================ */
 :root {
-  /* Light theme (default) */
   --bg-primary: #ffffff;
   --bg-secondary: #f8fafc;
   --bg-tertiary: #f1f5f9;
@@ -68,9 +67,6 @@
   --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.4), 0 4px 6px -4px rgba(0,0,0,0.3);
 }
 
-/* ============================================================
-   RESET & BASE
-   ============================================================ */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html { font-size: 16px; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
 body {
@@ -82,12 +78,8 @@ body {
   transition: background var(--transition), color var(--transition);
 }
 
-/* ============================================================
-   LAYOUT
-   ============================================================ */
 .app { max-width: var(--max-w); margin: 0 auto; padding: calc(var(--header-h) + 24px) 20px 40px; }
 
-/* Header */
 .header {
   position: fixed; top: 0; left: 0; right: 0; height: var(--header-h);
   background: var(--bg-primary); border-bottom: 1px solid var(--border-color);
@@ -101,7 +93,6 @@ body {
 .logo-text { font-weight: 700; font-size: 1.25rem; color: var(--text-primary); letter-spacing: -0.02em; }
 .header-right { display: flex; align-items: center; gap: 8px; }
 
-/* Card */
 .card {
   background: var(--bg-primary);
   border: 1px solid var(--border-color);
@@ -112,7 +103,6 @@ body {
 }
 .card:hover { box-shadow: var(--shadow-md); }
 
-/* Buttons */
 .btn {
   display: inline-flex; align-items: center; justify-content: center; gap: 8px;
   padding: 10px 20px; font-size: 0.875rem; font-weight: 500; font-family: inherit;
@@ -132,7 +122,6 @@ body {
 .btn-icon { padding: 8px; border-radius: var(--radius-sm); }
 .btn-icon.btn-sm { padding: 6px; }
 
-/* Toggle Switch */
 .toggle { position: relative; display: inline-flex; align-items: center; gap: 10px; cursor: pointer; }
 .toggle input { position: absolute; opacity: 0; width: 0; height: 0; }
 .toggle-slider {
@@ -149,7 +138,6 @@ body {
 .toggle input:checked + .toggle-slider::after { transform: translateX(20px); background: white; }
 .toggle-label { font-size: 0.8125rem; font-weight: 500; color: var(--text-secondary); user-select: none; }
 
-/* Textarea */
 .textarea-wrap { position: relative; }
 .textarea {
   width: 100%; min-height: 160px; padding: 16px; font-family: var(--font-sans);
@@ -161,14 +149,12 @@ body {
 .textarea::placeholder { color: var(--text-muted); }
 .char-count { position: absolute; bottom: 8px; right: 12px; font-size: 0.75rem; color: var(--text-muted); font-family: var(--font-mono); }
 
-/* Result Area */
 .result-area { background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 16px; min-height: 140px; position: relative; }
 .result-content { white-space: pre-wrap; word-wrap: break-word; font-size: 1rem; line-height: 1.7; color: var(--text-primary); min-height: 100px; }
 .result-placeholder { color: var(--text-muted); font-style: italic; }
 .diff-highlight { background: var(--success-light); color: #065f46; padding: 0 2px; border-radius: 2px; font-weight: 500; }
 .diff-highlight.error { background: var(--error-light); color: #991b1b; }
 
-/* Badges */
 .badge { display: inline-flex; align-items: center; gap: 4px; padding: 4px 10px; border-radius: var(--radius-full); font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; }
 .badge-primary { background: var(--accent-light); color: var(--accent); }
 .badge-success { background: var(--success-light); color: #065f46; }
@@ -176,32 +162,28 @@ body {
 .badge-error { background: var(--error-light); color: #991b1b; }
 .badge-info { background: var(--bg-tertiary); color: var(--text-secondary); }
 
-/* Section */
 .section { margin-bottom: 24px; }
 .section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
 .section-title { font-size: 0.875rem; font-weight: 600; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.05em; }
 .section-actions { display: flex; gap: 8px; }
 
-/* Grid */
 .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
 @media (max-width: 768px) { .grid-2 { grid-template-columns: 1fr; } }
 
-/* Status Pill */
 .status-pill { display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; border-radius: var(--radius-full); font-size: 0.75rem; font-weight: 500; }
 .status-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--text-muted); }
 .status-dot.active { background: var(--success); box-shadow: 0 0 0 3px var(--success-light); }
 .status-dot.recording { background: var(--error); animation: pulse 1s infinite; box-shadow: 0 0 0 3px var(--error-light); }
 @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
 
-/* Toast */
 .toast-container { position: fixed; bottom: 24px; right: 24px; z-index: 1000; display: flex; flex-direction: column; gap: 8px; }
 .toast { background: var(--bg-primary); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 12px 16px; box-shadow: var(--shadow-lg); display: flex; align-items: center; gap: 10px; min-width: 280px; max-width: 400px; animation: slideIn 0.3s ease; }
 .toast.success { border-left: 4px solid var(--success); }
 .toast.error { border-left: 4px solid var(--error); }
+.toast.warning { border-left: 4px solid var(--warning); }
 .toast.info { border-left: 4px solid var(--accent); }
 @keyframes slideIn { from { opacity: 0; transform: translateX(100%); } to { opacity: 1; transform: translateX(0); } }
 
-/* Modal */
 .modal-overlay { position: fixed; inset: 0; background: rgba(15,23,42,0.6); z-index: 200; display: none; align-items: center; justify-content: center; padding: 24px; backdrop-filter: blur(4px); }
 .modal-overlay.open { display: flex; }
 .modal { background: var(--bg-primary); border: 1px solid var(--border-color); border-radius: var(--radius-lg); box-shadow: var(--shadow-lg); width: 100%; max-width: 520px; max-height: 90vh; overflow-y: auto; animation: modalIn 0.2s ease; }
@@ -213,7 +195,6 @@ body {
 .modal-body { padding: 24px; }
 .modal-footer { padding: 16px 24px; border-top: 1px solid var(--border-color); display: flex; justify-content: flex-end; gap: 10px; }
 
-/* Settings List */
 .setting-item { display: flex; align-items: center; justify-content: space-between; padding: 16px 0; border-bottom: 1px solid var(--border-color); }
 .setting-item:last-child { border-bottom: none; }
 .setting-info { display: flex; flex-direction: column; gap: 4px; }
@@ -221,16 +202,19 @@ body {
 .setting-desc { font-size: 0.8125rem; color: var(--text-muted); }
 .setting-input { font-family: var(--font-mono); font-size: 0.8125rem; padding: 8px 12px; border: 1px solid var(--border-color); border-radius: var(--radius-sm); background: var(--bg-input); color: var(--text-primary); width: 200px; }
 
-/* Footer */
 .footer { text-align: center; padding: 40px 20px; color: var(--text-muted); font-size: 0.8125rem; }
 .footer a { color: var(--accent); text-decoration: none; }
 .footer a:hover { text-decoration: underline; }
 
-/* Scrollbar */
 ::-webkit-scrollbar { width: 8px; height: 8px; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 4px; }
 ::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
+
+/* Loading overlay on button */
+.btn .spinner { display: inline-block; width: 14px; height: 14px; border: 2px solid rgba(255,255,255,0.3); border-top-color: white; border-radius: 50%; animation: spin 0.6s linear infinite; margin-right: 8px; }
+.btn-secondary .spinner { border-color: rgba(0,0,0,0.2); border-top-color: var(--text-primary); }
+@keyframes spin { to { transform: rotate(360deg); } }
 </style>
 </head>
 <body>
@@ -372,7 +356,7 @@ body {
           <span class="setting-label">LanguageTool Server</span>
           <span class="setting-desc">Local grammar checking (default: http://localhost:8010)</span>
         </div>
-        <input type="url" class="setting-input" id="ltEndpoint" value="http://localhost:8010" placeholder="http://localhost:8010">
+        <input type="url" class="setting-input" id="ltEndpoint" value="http://localhost:8010/v2" placeholder="http://localhost:8010/v2">
       </div>
 
       <div class="setting-item" id="localEndpoints2" style="display: none;">
@@ -380,7 +364,7 @@ body {
           <span class="setting-label">LibreTranslate Server</span>
           <span class="setting-desc">Local translation (default: http://localhost:5000)</span>
         </div>
-        <input type="url" class="setting-input" id="ltEndpoint2" value="http://localhost:5000" placeholder="http://localhost:5000">
+        <input type="url" class="setting-input" id="libreEndpoint" value="http://localhost:5000" placeholder="http://localhost:5000">
       </div>
 
       <div class="setting-item">
@@ -397,7 +381,7 @@ body {
 
       <div class="setting-item">
         <div class="setting-info">
-          <span class="setting-label">LanguageTool API</span>
+          <span class="setting-label">LanguageTool Cloud API</span>
           <span class="setting-desc">Public instance (20 req/min free, no key needed)</span>
         </div>
         <input type="url" class="setting-input" id="ltCloudEndpoint" value="https://api.languagetool.org/v2" style="width: auto; max-width: 100%;">
@@ -438,25 +422,30 @@ body {
 
 <script>
 /* ============================================================
-   GRAMMAR ASSISTANT — Single-file Vanilla JS App
+   GRAMMAR ASSISTANT — Fixed for GitHub Pages (CORS proxy)
    ============================================================ */
 
 // ---- CONFIG & STATE ----
 const CONFIG = {
   // Public API endpoints (free tiers)
   LANGUAGETOOL_CLOUD: 'https://api.languagetool.org/v2',
+  // CORS proxies for GitHub Pages - try multiple
+  CORS_PROXIES: [
+    'https://corsproxy.io/?',
+    'https://api.allorigins.win/raw?url=',
+    'https://cors.bridged.cc/',
+    ''
+  ],
   LIBRETRANSLATE_PUBLIC: 'https://libretranslate.de/translate',
   MYMEMORY_API: 'https://api.mymemory.translated.net/get',
   GOOGLE_TRANSLATE_UNOFFICIAL: 'https://translate.googleapis.com/translate_a/single',
 
-  // Defaults
   MAX_CHARS: 5000,
   HISTORY_LIMIT: 50,
-  REQUEST_TIMEOUT: 15000
+  REQUEST_TIMEOUT: 20000
 };
 
 const state = {
-  // Settings (loaded from localStorage)
   settings: {
     localMode: false,
     ltEndpoint: 'http://localhost:8010/v2',
@@ -467,23 +456,19 @@ const state = {
     showDiff: true,
     theme: 'light'
   },
-
-  // Runtime
   isRecording: false,
   recognition: null,
   lastResult: '',
   lastCorrections: [],
-  abortController: null
+  abortController: null,
+  corsProxyIndex: 0
 };
 
 // ---- DOM ELEMENTS ----
 const els = {
-  // Header
   themeInput: document.getElementById('themeInput'),
   themeLabel: document.getElementById('themeLabel'),
   settingsBtn: document.getElementById('settingsBtn'),
-
-  // Input
   inputText: document.getElementById('inputText'),
   inputCount: document.getElementById('inputCount'),
   voiceBtn: document.getElementById('voiceBtn'),
@@ -495,14 +480,10 @@ const els = {
   autoFixToggle: document.getElementById('autoFixToggle'),
   fixBtn: document.getElementById('fixBtn'),
   translateBtn: document.getElementById('translateBtn'),
-
-  // Status
   apiStatusDot: document.getElementById('apiStatusDot'),
   apiStatusText: document.getElementById('apiStatusText'),
   langBadge: document.getElementById('langBadge'),
   modeBadge: document.getElementById('modeBadge'),
-
-  // Result
   resultArea: document.getElementById('resultArea'),
   resultContent: document.getElementById('resultContent'),
   correctionCount: document.getElementById('correctionCount'),
@@ -510,73 +491,51 @@ const els = {
   copyBtn: document.getElementById('copyBtn'),
   speakBtn: document.getElementById('speakBtn'),
   swapBtn: document.getElementById('swapBtn'),
-
-  // Quick actions
   quickActions: document.querySelectorAll('[data-action]'),
-
-  // History
   historyList: document.getElementById('historyList'),
   clearHistoryBtn: document.getElementById('clearHistoryBtn'),
-
-  // Settings Modal
   settingsModal: document.getElementById('settingsModal'),
   closeSettingsBtn: document.getElementById('closeSettingsBtn'),
   localModeToggle: document.getElementById('localModeToggle'),
   localEndpoints: document.getElementById('localEndpoints'),
   localEndpoints2: document.getElementById('localEndpoints2'),
   ltEndpoint: document.getElementById('ltEndpoint'),
-  libreEndpoint: document.getElementById('ltEndpoint2'),
+  libreEndpoint: document.getElementById('libreEndpoint'),
   translateApiSelect: document.getElementById('translateApiSelect'),
   ltCloudEndpoint: document.getElementById('ltCloudEndpoint'),
   autoSaveToggle: document.getElementById('autoSaveToggle'),
   showDiffToggle: document.getElementById('showDiffToggle'),
   saveSettingsBtn: document.getElementById('saveSettingsBtn'),
   resetSettingsBtn: document.getElementById('resetSettingsBtn'),
-
-  // Toast
   toastContainer: document.getElementById('toastContainer')
 };
 
 // ---- UTILITIES ----
-const $ = (sel, ctx = document) => ctx.querySelector(sel);
-const $$ = (sel, ctx = document) => [...ctx.querySelectorAll(sel)];
-
 function showToast(message, type = 'info', duration = 3000) {
   const toast = document.createElement('div');
   toast.className = `toast ${type}`;
-  const icons = { success: 'fa-check-circle', error: 'fa-exclamation-circle', info: 'fa-info-circle' };
+  const icons = { success: 'fa-check-circle', error: 'fa-exclamation-circle', warning: 'fa-exclamation-triangle', info: 'fa-info-circle' };
   toast.innerHTML = `<i class="fas ${icons[type]}"></i><span>${message}</span>`;
   els.toastContainer.appendChild(toast);
   setTimeout(() => { toast.style.animation = 'slideIn 0.3s ease reverse'; setTimeout(() => toast.remove(), 300); }, duration);
 }
 
-function debounce(fn, ms) { let t; return (...args) => { clearTimeout(t); t = setTimeout(() => fn(...args), ms); }; }
-
 function escapeHtml(str) {
   return str.replace(/[&<>"']/g, c => ({'&':'&','<':'<','>':'>','"':'"',"'":'''}[c]));
 }
 
-function highlightDiff(original, corrected) {
-  // Simple word-level diff for display
-  const origWords = original.split(/(\s+)/).filter(w => w.length > 0);
-  const corrWords = corrected.split(/(\s+)/).filter(w => w.length > 0);
-  // For now, just return corrected with basic highlighting markers
-  // A full diff algorithm would be more complex; we'll use a simplified approach
-  return corrected;
-}
+function debounce(fn, ms) { let t; return (...args) => { clearTimeout(t); t = setTimeout(() => fn(...args), ms); }; }
 
-// ---- SETTINGS MANAGEMENT ----
+// ---- SETTINGS ----
 function loadSettings() {
   try {
     const saved = localStorage.getItem('grammarAssistant_settings');
-    if (saved) {
-      Object.assign(state.settings, JSON.parse(saved));
-    }
+    if (saved) Object.assign(state.settings, JSON.parse(saved));
     const theme = localStorage.getItem('grammarAssistant_theme') || 'light';
     state.settings.theme = theme;
     applyTheme(theme);
     applySettingsToUI();
-  } catch (e) { console.warn('Failed to load settings:', e); }
+  } catch (e) { console.warn('Settings load failed:', e); }
 }
 
 function saveSettings() {
@@ -641,12 +600,7 @@ function addToHistory(original, result, type) {
   if (!state.settings.autoSave) return;
   try {
     const history = JSON.parse(localStorage.getItem('grammarAssistant_history') || '[]');
-    history.unshift({
-      original: original.substring(0, 500),
-      result: result.substring(0, 500),
-      type,
-      timestamp: new Date().toLocaleString()
-    });
+    history.unshift({ original: original.substring(0, 500), result: result.substring(0, 500), type, timestamp: new Date().toLocaleString() });
     if (history.length > state.settings.HISTORY_LIMIT) history.pop();
     localStorage.setItem('grammarAssistant_history', JSON.stringify(history));
     loadHistory();
@@ -659,19 +613,19 @@ function clearHistory() {
   showToast('History cleared', 'success');
 }
 
-// ---- SPEECH RECOGNITION (Web Speech API) ----
+// ---- SPEECH RECOGNITION ----
 function initSpeechRecognition() {
   const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
   if (!SpeechRecognition) {
     els.voiceBtn.disabled = true;
-    els.voiceBtn.title = 'Web Speech API not supported in this browser. Use Chrome/Edge/Safari.';
+    els.voiceBtn.title = 'Web Speech API not supported. Use Chrome/Edge/Safari.';
     els.voiceText.textContent = 'Voice Unavailable';
     return;
   }
   state.recognition = new SpeechRecognition();
   state.recognition.continuous = true;
   state.recognition.interimResults = true;
-  state.recognition.lang = 'en-US'; // Default, user can change
+  state.recognition.lang = 'en-US';
 
   state.recognition.onstart = () => {
     state.isRecording = true;
@@ -696,21 +650,16 @@ function initSpeechRecognition() {
 
   state.recognition.onresult = (event) => {
     let finalTranscript = '';
-    let interimTranscript = '';
     for (let i = event.resultIndex; i < event.results.length; i++) {
-      const transcript = event.results[i][0].transcript;
-      if (event.results[i].isFinal) finalTranscript += transcript + ' ';
-      else interimTranscript += transcript + ' ';
+      if (event.results[i].isFinal) finalTranscript += event.results[i][0].transcript + ' ';
     }
     if (finalTranscript) {
       els.inputText.value += finalTranscript;
       updateCharCount();
     }
-    // Show interim in placeholder or separate area (optional)
   };
 
   state.recognition.onerror = (event) => {
-    console.warn('Speech recognition error:', event.error);
     if (event.error !== 'no-speech' && event.error !== 'aborted') {
       showToast(`Voice error: ${event.error}`, 'error');
     }
@@ -722,13 +671,37 @@ function toggleVoice() {
   if (state.isRecording) {
     state.recognition.stop();
   } else {
-    // Detect language from toggle
     state.recognition.lang = els.translateToggle.checked ? 'ml-IN' : 'en-US';
     try { state.recognition.start(); } catch (e) { console.warn('Recognition start error:', e); }
   }
 }
 
-// ---- API CALLS ----
+// ---- FETCH WITH CORS PROXY FALLBACK ----
+async function fetchWithProxy(url, options = {}) {
+  // If local mode or no proxy needed, try direct first
+  if (state.settings.localMode || url.startsWith('http://localhost') || url.startsWith('http://127.0.0.1')) {
+    return fetchWithTimeout(url, options);
+  }
+
+  let lastError;
+  for (let i = 0; i < CONFIG.CORS_PROXIES.length; i++) {
+    const proxy = CONFIG.CORS_PROXIES[i];
+    const proxiedUrl = proxy + encodeURIComponent(url);
+    try {
+      const res = await fetchWithTimeout(proxiedUrl, options);
+      if (res.ok) {
+        state.corsProxyIndex = i; // Remember working proxy
+        return res;
+      }
+      lastError = new Error(`HTTP ${res.status}`);
+    } catch (e) {
+      lastError = e;
+      console.warn(`Proxy ${i} failed:`, e.message);
+    }
+  }
+  throw lastError || new Error('All proxies failed');
+}
+
 async function fetchWithTimeout(url, options = {}, timeout = CONFIG.REQUEST_TIMEOUT) {
   state.abortController = new AbortController();
   const id = setTimeout(() => state.abortController.abort(), timeout);
@@ -743,84 +716,78 @@ async function fetchWithTimeout(url, options = {}, timeout = CONFIG.REQUEST_TIME
   }
 }
 
-// LanguageTool Grammar Check
+// ---- GRAMMAR CHECK ----
 async function checkGrammar(text, lang = 'en-US') {
-  const endpoint = state.settings.localMode
-    ? `${state.settings.ltEndpoint.replace('/v2', '')}/v2/check`
-    : `${state.settings.ltCloudEndpoint}/check`;
+  const baseEndpoint = state.settings.localMode
+    ? state.settings.ltEndpoint.replace('/v2', '')
+    : state.settings.ltCloudEndpoint;
 
-  const params = new URLSearchParams({
-    text,
-    language: lang,
-    enabledOnly: 'false'
-  });
+  const checkUrl = `${baseEndpoint}/check`;
+  const params = new URLSearchParams({ text, language: lang, enabledOnly: 'false' });
 
-  const res = await fetchWithTimeout(endpoint, {
+  const res = await fetchWithProxy(checkUrl, {
     method: 'POST',
     headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
     body: params.toString()
   });
 
-  if (!res.ok) throw new Error(`Grammar API error: ${res.status}`);
+  if (!res.ok) {
+    const errText = await res.text().catch(() => '');
+    throw new Error(`Grammar API error: ${res.status} ${errText}`);
+  }
   return res.json();
 }
 
-// Apply LanguageTool corrections
 function applyCorrections(text, matches) {
   if (!matches || matches.length === 0) return { text, count: 0 };
-  // Sort matches by offset descending so replacements don't shift indices
   const sorted = [...matches].sort((a, b) => b.offset - a.offset);
   let result = text;
   let count = 0;
   for (const match of sorted) {
     if (match.replacements && match.replacements.length > 0) {
       const replacement = match.replacements[0].value;
-      const before = result.substring(0, match.offset);
-      const after = result.substring(match.offset + match.length);
-      result = before + replacement + after;
+      result = result.substring(0, match.offset) + replacement + result.substring(match.offset + match.length);
       count++;
     }
   }
   return { text: result, count };
 }
 
-// Translation
+// ---- TRANSLATION ----
 async function translateText(text, sourceLang = 'ml', targetLang = 'en') {
   const api = state.settings.translateApi;
-  let res, data;
 
   if (state.settings.localMode) {
-    // Local LibreTranslate
-    res = await fetchWithTimeout(`${state.settings.libreEndpoint}/translate`, {
+    const res = await fetchWithTimeout(`${state.settings.libreEndpoint}/translate`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ q: text, source: sourceLang, target: targetLang, format: 'text' })
     });
-    data = await res.json();
+    const data = await res.json();
     return data.translatedText;
   }
 
   if (api === 'libretranslate') {
-    res = await fetchWithTimeout(CONFIG.LIBRETRANSLATE_PUBLIC, {
+    const res = await fetchWithProxy(CONFIG.LIBRETRANSLATE_PUBLIC, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ q: text, source: sourceLang, target: targetLang, format: 'text' })
     });
-    data = await res.json();
+    const data = await res.json();
     return data.translatedText;
   }
 
   if (api === 'mymemory') {
     const url = `${CONFIG.MYMEMORY_API}?q=${encodeURIComponent(text)}&langpair=${sourceLang}|${targetLang}`;
-    res = await fetchWithTimeout(url);
-    data = await res.json();
+    const res = await fetchWithProxy(url);
+    const data = await res.json();
     return data.responseData?.translatedText || text;
   }
 
   if (api === 'google-unofficial') {
     const url = `${CONFIG.GOOGLE_TRANSLATE_UNOFFICIAL}?client=gtx&sl=${sourceLang}&tl=${targetLang}&dt=t&q=${encodeURIComponent(text)}`;
-    res = await fetchWithTimeout(url);
-    data = await res.json();
+    const res = await fetchWithProxy(url);
+    const data = await res.json();
     return data[0]?.map(x => x[0]).join('') || text;
   }
 
@@ -842,11 +809,10 @@ async function fixGrammar() {
     state.lastCorrections = result.matches || [];
     renderResult(corrected, count, 'grammar');
     addToHistory(text, corrected, 'Grammar Fix');
-    showToast(`Fixed ${count} issue${count !== 1 ? 's' : ''}`, 'success');
+    showToast(`Fixed ${count} issue${count !== 1 ? 's' : ''}`, count > 0 ? 'success' : 'info');
   } catch (e) {
     console.error('Grammar check failed:', e);
-    showToast('Grammar check failed: ' + e.message, 'error');
-    // Fallback: simple client-side fixes
+    showToast('Grammar API failed — using offline fallback', 'warning');
     fallbackGrammarFix(text);
   } finally {
     setLoading(false, 'fixBtn', '<i class="fas fa-magic"></i> Fix Grammar');
@@ -854,7 +820,6 @@ async function fixGrammar() {
 }
 
 function fallbackGrammarFix(text) {
-  // Basic client-side fixes for when API fails
   let corrected = text
     .replace(/\bi\b/g, 'I')
     .replace(/\s+/g, ' ')
@@ -879,15 +844,12 @@ async function translate() {
     let corrections = 0;
 
     if (els.autoFixToggle.checked && translated !== text) {
-      // Auto-fix grammar on translated text
       try {
         const result = await checkGrammar(translated, 'en-US');
         const { text: corrected, count } = applyCorrections(translated, result.matches);
         finalText = corrected;
         corrections = count;
-      } catch (e) {
-        // Ignore grammar errors in auto-fix
-      }
+      } catch (e) { /* ignore */ }
     }
 
     state.lastResult = finalText;
@@ -904,37 +866,24 @@ async function translate() {
 
 function renderResult(text, count, type) {
   els.resultContent.classList.remove('result-placeholder');
-  let displayText = escapeHtml(text);
-  if (state.settings.showDiff && type === 'grammar' && count > 0) {
-    // Simple highlight: we can't easily do diff here without original, so just show count
-  }
-  els.resultContent.innerHTML = displayText;
+  els.resultContent.innerHTML = escapeHtml(text);
   els.correctionCount.textContent = `${count} correction${count !== 1 ? 's' : ''}`;
-  els.correctionCount.style.display = type === 'grammar' && count > 0 ? 'inline-flex' : 'none';
-  els.translationCount.style.display = type === 'translate' ? 'inline-flex' : 'none';
+  els.correctionCount.style.display = (type === 'grammar' && count > 0) ? 'inline-flex' : 'none';
+  els.translationCount.style.display = (type === 'translate') ? 'inline-flex' : 'none';
 }
 
 function setLoading(loading, btnId, text) {
   const btn = els[btnId];
   btn.disabled = loading;
-  btn.innerHTML = loading ? `<i class="fas fa-spinner fa-spin"></i> ${text}` : text;
+  if (loading) {
+    btn.innerHTML = `<span class="spinner"></span> ${text}`;
+  } else {
+    btn.innerHTML = text;
+  }
 }
 
 async function handleQuickAction(action) {
-  const text = els.resultContent.textContent.trim() || els.inputText.value.trim();
-  if (!text) { showToast('No text to process', 'error'); return; }
-
-  const prompts = {
-    formal: 'Rewrite this text in formal, professional English:',
-    casual: 'Rewrite this text in casual, conversational English:',
-    concise: 'Make this text more concise while keeping the meaning:',
-    expand: 'Expand this text with more detail and explanation:',
-    bullets: 'Convert this text to bullet points:',
-    email: 'Format this as a professional email:'
-  };
-
-  // For now, just show a toast since we'd need an LLM for this
-  showToast(`${action.charAt(0).toUpperCase() + action.slice(1)}: Use an LLM for this feature`, 'info');
+  showToast(`${action.charAt(0).toUpperCase() + action.slice(1)} requires LLM backend`, 'info');
 }
 
 // ---- UTILITY ACTIONS ----
@@ -953,7 +902,6 @@ function speakResult() {
   if ('speechSynthesis' in window) {
     const utter = new SpeechSynthesisUtterance(text);
     utter.lang = 'en-US';
-    utter.rate = 1;
     speechSynthesis.cancel();
     speechSynthesis.speak(utter);
     showToast('Speaking...', 'info', 1500);
@@ -977,7 +925,7 @@ async function pasteText() {
     els.inputText.value = text;
     updateCharCount();
     showToast('Pasted from clipboard', 'success');
-  } catch (e) { showToast('Paste failed - allow clipboard permission', 'error'); }
+  } catch (e) { showToast('Paste failed — allow clipboard permission', 'error'); }
 }
 
 function clearInput() {
@@ -1007,20 +955,19 @@ async function updateApiStatus() {
       ? `${state.settings.ltEndpoint.replace('/v2', '')}/v2/languages`
       : `${state.settings.ltCloudEndpoint}/languages`;
 
-    const res = await fetchWithTimeout(ltUrl, { method: 'GET' }, 5000);
+    const res = await fetchWithProxy(ltUrl, { method: 'GET' }, 8000);
     if (res.ok) {
       els.apiStatusDot.classList.add('active');
-      els.apiStatusText.textContent = state.settings.localMode ? 'Local LanguageTool connected' : 'LanguageTool API connected';
+      els.apiStatusText.textContent = state.settings.localMode ? 'Local LanguageTool connected' : 'LanguageTool API connected (via proxy)';
     } else throw new Error('API error');
   } catch (e) {
     els.apiStatusDot.classList.remove('active');
-    els.apiStatusText.textContent = state.settings.localMode ? 'Local server not reachable' : 'Using offline mode / API limited';
+    els.apiStatusText.textContent = state.settings.localMode ? 'Local server not reachable' : 'Using offline fallback / API limited';
   }
 }
 
 // ---- EVENT LISTENERS ----
 function bindEvents() {
-  // Header
   els.themeInput.addEventListener('change', () => {
     const theme = els.themeInput.checked ? 'dark' : 'light';
     applyTheme(theme);
@@ -1032,7 +979,6 @@ function bindEvents() {
   els.closeSettingsBtn.addEventListener('click', () => els.settingsModal.classList.remove('open'));
   els.settingsModal.addEventListener('click', (e) => { if (e.target === els.settingsModal) els.settingsModal.classList.remove('open'); });
 
-  // Input
   els.inputText.addEventListener('input', updateCharCount);
   els.voiceBtn.addEventListener('click', toggleVoice);
   els.pasteBtn.addEventListener('click', pasteText);
@@ -1040,17 +986,14 @@ function bindEvents() {
   els.fixBtn.addEventListener('click', fixGrammar);
   els.translateBtn.addEventListener('click', translate);
 
-  // Result actions
   els.copyBtn.addEventListener('click', copyResult);
   els.speakBtn.addEventListener('click', speakResult);
   els.swapBtn.addEventListener('click', swapText);
 
-  // Quick actions
   els.quickActions.forEach(btn => {
     btn.addEventListener('click', () => handleQuickAction(btn.dataset.action));
   });
 
-  // History
   els.clearHistoryBtn.addEventListener('click', clearHistory);
   els.historyList.addEventListener('click', (e) => {
     const useBtn = e.target.closest('.use-history');
@@ -1059,11 +1002,7 @@ function bindEvents() {
       const idx = parseInt(useBtn.dataset.index);
       const history = JSON.parse(localStorage.getItem('grammarAssistant_history') || '[]');
       const item = history[idx];
-      if (item) {
-        els.inputText.value = item.original;
-        updateCharCount();
-        showToast('Loaded from history', 'success');
-      }
+      if (item) { els.inputText.value = item.original; updateCharCount(); showToast('Loaded from history', 'success'); }
     }
     if (delBtn) {
       const idx = parseInt(delBtn.dataset.index);
@@ -1074,7 +1013,6 @@ function bindEvents() {
     }
   });
 
-  // Settings
   els.localModeToggle.addEventListener('change', () => {
     const enabled = els.localModeToggle.checked;
     state.settings.localMode = enabled;
@@ -1105,16 +1043,8 @@ function bindEvents() {
     }
   });
 
-  // Keyboard shortcuts
   document.addEventListener('keydown', (e) => {
-    if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
-      if (document.activeElement === els.inputText) fixGrammar();
-    }
-    if (e.key === 'Escape') els.settingsModal.classList.remove('open');
-  });
-
-  // Close modal on Escape
-  document.addEventListener('keydown', (e) => {
+    if ((e.ctrlKey || e.metaKey) && e.key === 'Enter' && document.activeElement === els.inputText) fixGrammar();
     if (e.key === 'Escape') els.settingsModal.classList.remove('open');
   });
 }
@@ -1126,15 +1056,10 @@ async function init() {
   initSpeechRecognition();
   bindEvents();
   updateApiStatus();
-  // Periodic status check
   setInterval(updateApiStatus, 60000);
-
-  // Focus input on load
   setTimeout(() => els.inputText.focus(), 100);
-
   console.log('🎤 Grammar Assistant ready!');
-  console.log('📝 Features: Voice input, Grammar check, Malayalam→English, Local mode');
-  console.log('🔧 Local backend: Set up LanguageTool + LibreTranslate for unlimited use');
+  console.log('🔧 CORS proxy fallback enabled for GitHub Pages');
 }
 
 init();
